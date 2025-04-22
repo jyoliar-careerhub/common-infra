@@ -36,11 +36,11 @@ resource "aws_opensearch_domain" "this" {
 
 
   cluster_config {
-    instance_type          = var.instance_type #t3 is not supported by auto-tune.
-    zone_awareness_enabled = true
-    zone_awareness_config {
-      availability_zone_count = 3
-    }
+    instance_type = var.instance_type #t3 is not supported by auto-tune.
+    # zone_awareness_enabled = true
+    # zone_awareness_config {
+    #   availability_zone_count = 3
+    # }
     instance_count = 1
   }
 
