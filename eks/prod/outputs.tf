@@ -21,3 +21,11 @@ output "aws_lbc_ns" {
 output "aws_lbc_sa" {
   value = module.role_for_sa.service_account_name
 }
+
+output "opensearch_endpoint" {
+  value = module.opensearch.opensearch_endpoint
+}
+
+output "opensearch_dashboard_endpoint" {
+  value = module.opensearch.opensearch_dashboard_endpoint
+}
