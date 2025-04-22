@@ -172,16 +172,26 @@ resource "aws_iam_role_policy_attachment" "argocd-repo-reader" {
 
 
 #opensearch
-module "opensearch" {
-  source = "../_modules/opensearch"
+# module "opensearch" {
+#   source = "../_modules/opensearch"
 
-  name       = "${var.env}-eks-logs-opensearch"
+#   name       = "${var.env}-eks-logs-opensearch"
+#   subnet_ids = local.eks_subnets_outputs.public_subnet_ids[0]
+#   vpc_id     = local.eks_subnets_outputs.vpc_id
+
+#   instance_type  = "t2.micro.search"
+#   instance_count = 1
+#   engine_version = "Elasticsearch_2.3"
+
+#   volume_size = 10
+# }
+
+module "opensearch_serverless" {
+  source = "../_modules/opensearch_serverless"
+
+  name       = "${var.env}-eks-logs"
   subnet_ids = local.eks_subnets_outputs.public_subnet_ids
   vpc_id     = local.eks_subnets_outputs.vpc_id
 
-  instance_type  = "t2.micro.search"
-  instance_count = 1
-  engine_version = "Elasticsearch_2.3"
-
-  volume_size = 10
+  # security_group_ids = [for node_group in module.node_group : node_group.allowed_alb_sg_id]
 }
