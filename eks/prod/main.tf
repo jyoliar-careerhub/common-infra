@@ -193,7 +193,7 @@ module "fluentbit_opensearch_role" {
   name                  = "${var.env}-fluentbit_opensearch_role"
   eks_oidc_provider_arn = module.eks.eks_oidc_provider_arn
   namespace             = "kube-logs"
-  service_account_name  = "fluentbit_opensearch_role"
+  service_account_name  = "fluentbit-opensearch-role"
 }
 
 module "opensearch_serverless" {
