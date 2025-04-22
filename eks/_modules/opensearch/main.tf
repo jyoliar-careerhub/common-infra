@@ -50,6 +50,10 @@ resource "aws_opensearch_domain" "this" {
     security_group_ids = concat([aws_security_group.this.id], var.security_group_ids)
   }
 
+  ebs_options {
+    ebs_enabled = true
+    volume_size = var.volume_size
+  }
   # advanced_security_options {
   #   enabled                        = false
   #   anonymous_auth_enabled         = true

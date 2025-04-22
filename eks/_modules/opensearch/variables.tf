@@ -22,6 +22,10 @@ variable "instance_count" {
   type = number
 }
 
+variable "volume_size" {
+  type = number
+}
+
 variable "security_group_ids" {
   type    = list(string)
   default = []
