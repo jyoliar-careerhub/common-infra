@@ -169,3 +169,17 @@ resource "aws_iam_role_policy_attachment" "argocd-repo-reader" {
   role       = module.eks_secrets_provider_role.role_name
   policy_arn = aws_iam_policy.argocd-repo-reader.arn
 }
+
+
+#opensearch
+module "opensearch" {
+  source = "../_modules/opensearch"
+
+  name       = "${var.env}-eks-logs-opensearch"
+  subnet_ids = local.eks_subnets_outputs.public_subnet_ids
+  vpc_id     = local.eks_subnets_outputs.vpc_id
+
+  instance_type  = "t2.micro.search"
+  instance_count = 1
+  engine_version = "Elasticsearch_7.1"
+}
