@@ -181,5 +181,5 @@ module "opensearch" {
 
   instance_type  = "t2.micro.search"
   instance_count = 1
-  engine_version = "Elasticsearch_7.1"
+  engine_version = "Elasticsearch_2.3"
 }
