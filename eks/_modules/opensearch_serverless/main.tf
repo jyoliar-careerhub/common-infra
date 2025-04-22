@@ -69,3 +69,58 @@ resource "aws_opensearchserverless_security_policy" "collection" {
     }
   ])
 }
+
+
+resource "aws_opensearchserverless_access_policy" "admin" {
+  name = "${var.name}-admin"
+  type = "data"
+
+  policy = jsonencode([
+    {
+      Rules = [
+        {
+          ResourceType = "index",
+          Resource = [
+            "index/${aws_opensearchserverless_collection.this.name}/*"
+          ],
+          Permission = [
+            "aoss:*"
+          ]
+        },
+        {
+          ResourceType = "collection",
+          Resource = [
+            "collection/${aws_opensearchserverless_collection.this.name}"
+          ],
+          Permission = [
+            "aoss:*"
+          ]
+        }
+      ],
+      Principal = var.admin_principal_arns,
+    }
+  ])
+}
+
+
+resource "aws_opensearchserverless_access_policy" "index_permission" {
+  name = "${var.name}-index-permission"
+  type = "data"
+
+  policy = jsonencode([
+    {
+      Rules = [
+        {
+          ResourceType = "index",
+          Resource = [
+            "index/${aws_opensearchserverless_collection.this.name}/*"
+          ],
+          Permission = [
+            "aoss:*"
+          ]
+        }
+      ],
+      Principal = var.index_permission_principal_arns,
+    }
+  ])
+}
