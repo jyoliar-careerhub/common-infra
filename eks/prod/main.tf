@@ -186,6 +186,16 @@ resource "aws_iam_role_policy_attachment" "argocd-repo-reader" {
 #   volume_size = 10
 # }
 
+module "fluentbit_opensearch_role" {
+
+  source = "../_modules/role_for_sa"
+
+  name                  = "${var.env}-fluentbit_opensearch_role"
+  eks_oidc_provider_arn = module.eks.eks_oidc_provider_arn
+  namespace             = "kube-logs"
+  service_account_name  = "fluentbit_opensearch_role"
+}
+
 module "opensearch_serverless" {
   source = "../_modules/opensearch_serverless"
 
@@ -193,5 +203,9 @@ module "opensearch_serverless" {
   subnet_ids = local.eks_subnets_outputs.public_subnet_ids
   vpc_id     = local.eks_subnets_outputs.vpc_id
 
+  admin_principal_arns = var.cluster_admin_arns
+  index_permission_principal_arns = [
+    module.fluentbit_opensearch_role.role_arn
+  ]
   # security_group_ids = [for node_group in module.node_group : node_group.allowed_alb_sg_id]
 }
