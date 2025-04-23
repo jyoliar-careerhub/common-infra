@@ -28,7 +28,7 @@ resource "aws_eks_node_group" "careerhub" {
 
   launch_template {
     id      = aws_launch_template.eks_worker.id
-    version = "$Latest"
+    version = "1"
   }
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
