@@ -209,3 +209,23 @@ module "opensearch_serverless" {
   ]
   # security_group_ids = [for node_group in module.node_group : node_group.allowed_alb_sg_id]
 }
+
+data "aws_iam_policy_document" "index_permission" {
+  statement {
+    effect  = "Allow"
+    actions = ["aoss:APIAccessAll"]
+
+    resources = [module.opensearch_serverless.opensearch_collection_arn]
+  }
+}
+
+resource "aws_iam_policy" "index_permission" {
+  name        = "${var.env}-eks-aoss"
+  description = "Index permission policy for OpenSearch Serverless"
+  policy      = data.aws_iam_policy_document.index_permission.json
+}
+
+resource "aws_iam_role_policy_attachment" "index_permission" {
+  policy_arn = aws_iam_policy.index_permission.arn
+  role       = module.fluentbit_opensearch_role.role_name
+}
