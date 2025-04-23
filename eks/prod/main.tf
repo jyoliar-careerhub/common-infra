@@ -113,17 +113,17 @@ resource "aws_iam_policy" "aws_lbc" {
   policy = data.http.aws_lbc_policy.body
 }
 
-module "role_for_sa" {
-  source = "../_modules/role_for_sa"
+module "aws_lbc_role" {
+  source = "../_modules/pod_identity"
 
-  name                  = "${var.env}-aws-lbc"
-  eks_oidc_provider_arn = module.eks.eks_oidc_provider_arn
-  namespace             = var.aws_lbc_ns
-  service_account_name  = var.aws_lbc_sa
+  name                 = "${var.env}-aws-lbc"
+  cluster_name         = module.eks.eks_cluster_name
+  namespace            = var.aws_lbc_ns
+  service_account_name = var.aws_lbc_sa
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
-  role       = module.role_for_sa.role_name
+  role       = module.aws_lbc_role.role_name
   policy_arn = aws_iam_policy.aws_lbc.arn
 }
 
