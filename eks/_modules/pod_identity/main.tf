@@ -1,3 +1,6 @@
+data "aws_eks_cluster" "this" {
+  name = var.cluster_name
+}
 
 data "aws_iam_policy_document" "assume_role" {
   statement {
@@ -14,11 +17,9 @@ data "aws_iam_policy_document" "assume_role" {
     ]
 
     condition {
-      test     = "StringLike"
-      variable = "eks:clusterName"
-      values = [
-        var.cluster_name
-      ]
+      test     = "StringEquals"
+      variable = "aws:RequestTag/eks-cluster-arn"
+      values   = [data.aws_eks_cluster.this.arn]
     }
   }
 }
