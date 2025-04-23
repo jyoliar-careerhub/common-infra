@@ -1,4 +1,3 @@
-data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "assume_role" {
   statement {
@@ -16,18 +15,11 @@ data "aws_iam_policy_document" "assume_role" {
 
     condition {
       test     = "StringLike"
-      variable = "aws:SourceArn"
+      variable = "eks:clusterName"
       values = [
-        "arn:aws:sts::${data.aws_caller_identity.current.account_id}:assumed-role/*"
+        var.cluster_name
       ]
     }
-
-    condition {
-      test     = "StringEquals"
-      variable = "aws:SourceAccount"
-      values   = [data.aws_caller_identity.current.account_id]
-    }
-
   }
 }
 
@@ -37,7 +29,7 @@ resource "aws_iam_role" "this" {
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
-resource "aws_eks_pod_identity_association" "example" {
+resource "aws_eks_pod_identity_association" "this" {
   cluster_name    = var.cluster_name
   namespace       = var.namespace
   service_account = var.service_account_name

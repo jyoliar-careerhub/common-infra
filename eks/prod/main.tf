@@ -188,12 +188,12 @@ resource "aws_iam_role_policy_attachment" "argocd-repo-reader" {
 
 module "fluentbit_opensearch_role" {
 
-  source = "../_modules/role_for_sa"
+  source = "../_modules/pod_identity"
 
-  name                  = "${var.env}-fluentbit_opensearch_role"
-  eks_oidc_provider_arn = module.eks.eks_oidc_provider_arn
-  namespace             = "kube-logs"
-  service_account_name  = "fluentbit-opensearch-role"
+  name                 = "${var.env}-fluentbit_opensearch_role"
+  cluster_name         = module.eks.eks_cluster_name
+  namespace            = "kube-logs"
+  service_account_name = "fluentbit-opensearch-role"
 }
 
 module "opensearch_serverless" {
