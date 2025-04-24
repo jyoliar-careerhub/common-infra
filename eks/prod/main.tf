@@ -117,7 +117,7 @@ module "aws_lbc_role" {
   source = "../_modules/pod_identity"
 
   name                 = "${var.env}-aws-lbc"
-  cluster_name         = module.eks.eks_cluster_name
+  cluster_arn          = module.eks.eks_cluster_arn
   namespace            = var.aws_lbc_ns
   service_account_name = var.aws_lbc_sa
 }
@@ -191,7 +191,7 @@ module "fluentbit_opensearch_role" {
   source = "../_modules/pod_identity"
 
   name                 = "${var.env}-fluentbit_opensearch_role"
-  cluster_name         = module.eks.eks_cluster_name
+  cluster_arn          = module.eks.eks_cluster_arn
   namespace            = "kube-logs"
   service_account_name = "fluentbit-opensearch-role"
 }
