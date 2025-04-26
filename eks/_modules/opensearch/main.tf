@@ -29,6 +29,11 @@ resource "aws_opensearch_domain" "this" {
     instance_count = 1
   }
 
+  advanced_security_options {
+    enabled                        = true
+    anonymous_auth_enabled         = true
+    internal_user_database_enabled = false
+  }
 
   ebs_options {
     ebs_enabled = true
