@@ -202,7 +202,7 @@ module "opensearch" {
   name = "${var.env}-eks-logs"
 
   engine_version = "OpenSearch_2.17"
-  instance_type  = "t3.small.search"
+  instance_type  = "t3.small.medium"
   volume_size    = 10
   instance_count = 1
 
