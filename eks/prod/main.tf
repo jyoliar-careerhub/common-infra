@@ -196,32 +196,31 @@ module "fluentbit_opensearch_role" {
   service_account_name = "fluentbit-opensearch-role"
 }
 
-module "opensearch_serverless" {
-  source = "../_modules/opensearch_serverless"
+module "opensearch" {
+  source = "../_modules/opensearch"
 
   name       = "${var.env}-eks-logs"
   subnet_ids = local.eks_subnets_outputs.public_subnet_ids
   vpc_id     = local.eks_subnets_outputs.vpc_id
 
-  admin_principal_arns = var.cluster_admin_arns
-  index_permission_principal_arns = [
-    module.fluentbit_opensearch_role.role_arn
-  ]
-  # security_group_ids = [for node_group in module.node_group : node_group.allowed_alb_sg_id]
+  engine_version = "OpenSearch_2.17"
+  instance_type  = "t3.small.search"
+  volume_size    = 10
+  instance_count = 1
 }
 
 data "aws_iam_policy_document" "index_permission" {
   statement {
     effect  = "Allow"
-    actions = ["aoss:APIAccessAll"]
+    actions = ["es:ESHttpPatch", "es:ESHttpPut", "es:ESHttpPost"]
 
-    resources = [module.opensearch_serverless.opensearch_collection_arn]
+    resources = [module.opensearch.opensearch_arn]
   }
 }
 
 resource "aws_iam_policy" "index_permission" {
-  name        = "${var.env}-eks-aoss"
-  description = "Index permission policy for OpenSearch Serverless"
+  name        = "${var.env}-eks-es"
+  description = "Index permission policy for OpenSearch"
   policy      = data.aws_iam_policy_document.index_permission.json
 }
 

@@ -23,9 +23,9 @@ output "aws_lbc_sa" {
 }
 
 output "opensearch_endpoint" {
-  value = module.opensearch_serverless.opensearch_endpoint
+  value = module.opensearch.opensearch_endpoint
 }
 
 output "opensearch_dashboard_endpoint" {
-  value = module.opensearch_serverless.opensearch_dashboard_endpoint
+  value = module.opensearch.opensearch_dashboard_endpoint
 }

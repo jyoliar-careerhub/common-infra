@@ -11,8 +11,8 @@ data "aws_subnet" "this" {
 
 resource "aws_security_group_rule" "allow_subnets" {
   type              = "ingress"
-  from_port         = 9200
-  to_port           = 9200
+  from_port         = 443
+  to_port           = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.this.id
   cidr_blocks       = [for subnet in data.aws_subnet.this : subnet.cidr_block]
