@@ -15,7 +15,7 @@ resource "aws_security_group_rule" "allow_subnets" {
   to_port           = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.this.id
-  cidr_blocks       = [for subnet in data.aws_subnet.this : subnet.cidr_block]
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "allow_egress" {
