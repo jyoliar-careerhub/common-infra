@@ -33,6 +33,9 @@ resource "aws_opensearch_domain" "this" {
     enabled                        = true
     anonymous_auth_enabled         = true
     internal_user_database_enabled = false
+    master_user_options {
+      master_user_arn = "arn:aws:iam::986069063944:user/admin"
+    }
   }
   encrypt_at_rest {
     enabled = true
