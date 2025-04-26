@@ -43,6 +43,9 @@ resource "aws_opensearch_domain" "this" {
   node_to_node_encryption {
     enabled = true
   }
+  domain_endpoint_options {
+    enforce_https = true
+  }
 
   ebs_options {
     ebs_enabled = true
