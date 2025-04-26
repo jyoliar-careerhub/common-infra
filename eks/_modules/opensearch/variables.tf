@@ -6,13 +6,6 @@ variable "engine_version" {
   type = string
 }
 
-variable "vpc_id" {
-  type = string
-}
-
-variable "subnet_ids" {
-  type = list(string)
-}
 
 variable "instance_type" {
   type = string
@@ -26,7 +19,7 @@ variable "volume_size" {
   type = number
 }
 
-variable "security_group_ids" {
+variable "admin_principal_arns" {
   type    = list(string)
   default = []
 }
