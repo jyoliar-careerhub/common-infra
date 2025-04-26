@@ -1,30 +1,19 @@
+data "aws_region" "current" {}
 
-resource "aws_security_group" "this" {
-  name   = "${var.name}-sg"
-  vpc_id = var.vpc_id
-}
+data "aws_caller_identity" "current" {}
 
-data "aws_subnet" "this" {
-  for_each = toset(var.subnet_ids)
-  id       = each.value
-}
+data "aws_iam_policy_document" "example" {
+  statement {
+    effect = "Allow"
 
-resource "aws_security_group_rule" "allow_subnets" {
-  type              = "ingress"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.this.id
-  cidr_blocks       = ["0.0.0.0/0"]
-}
+    principals {
+      type        = "AWS"
+      identifiers = var.admin_principal_arns
+    }
 
-resource "aws_security_group_rule" "allow_egress" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  security_group_id = aws_security_group.this.id
-  cidr_blocks       = ["0.0.0.0/0"] # Allow all outbound traffic
+    actions   = ["es:*"]
+    resources = ["arn:aws:es:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:domain/${var.name}/*"]
+  }
 }
 
 
@@ -36,31 +25,15 @@ resource "aws_opensearch_domain" "this" {
 
 
   cluster_config {
-    instance_type = var.instance_type #t3 is not supported by auto-tune.
-    # zone_awareness_enabled = true
-    # zone_awareness_config {
-    #   availability_zone_count = 3
-    # }
+    instance_type  = var.instance_type
     instance_count = 1
   }
 
-  # IF YOU WANT VPC access.
-  vpc_options {
-    subnet_ids         = var.subnet_ids
-    security_group_ids = concat([aws_security_group.this.id], var.security_group_ids)
-  }
 
   ebs_options {
     ebs_enabled = true
     volume_size = var.volume_size
   }
-  # advanced_security_options {
-  #   enabled                        = false
-  #   anonymous_auth_enabled         = true
-  #   internal_user_database_enabled = true
-  #   master_user_options {
-  #     master_user_name     = "admin"
-  #     master_user_password = "TestMasterPassword123!@#"
-  #   }
-  # }
+
+  access_policies = data.aws_iam_policy_document.example.json
 }

@@ -199,14 +199,14 @@ module "fluentbit_opensearch_role" {
 module "opensearch" {
   source = "../_modules/opensearch"
 
-  name       = "${var.env}-eks-logs"
-  subnet_ids = [local.eks_subnets_outputs.public_subnet_ids[0]]
-  vpc_id     = local.eks_subnets_outputs.vpc_id
+  name = "${var.env}-eks-logs"
 
   engine_version = "OpenSearch_2.17"
   instance_type  = "t3.small.search"
   volume_size    = 10
   instance_count = 1
+
+  admin_principal_arns = var.cluster_admin_arns
 }
 
 data "aws_iam_policy_document" "index_permission" {
