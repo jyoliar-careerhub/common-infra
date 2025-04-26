@@ -34,11 +34,16 @@ resource "aws_opensearch_domain" "this" {
     anonymous_auth_enabled         = true
     internal_user_database_enabled = false
   }
+  encrypt_at_rest {
+    enabled = true
+  }
+  node_to_node_encryption {
+    enabled = true
+  }
 
   ebs_options {
     ebs_enabled = true
     volume_size = var.volume_size
   }
-
   access_policies = data.aws_iam_policy_document.example.json
 }
