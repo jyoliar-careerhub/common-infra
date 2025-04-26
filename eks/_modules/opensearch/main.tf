@@ -45,5 +45,10 @@ resource "aws_opensearch_domain" "this" {
     ebs_enabled = true
     volume_size = var.volume_size
   }
+}
+
+resource "aws_opensearch_domain_policy" "opensearch" {
+  domain_name = aws_opensearch_domain.this.domain_name
+
   access_policies = data.aws_iam_policy_document.example.json
 }
