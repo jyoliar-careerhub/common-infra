@@ -1,3 +1,7 @@
+output "opensearch_arn" {
+  value = aws_opensearch_domain.this.arn
+}
+
 output "opensearch_endpoint" {
   value = aws_opensearch_domain.this.endpoint_v2
 }
