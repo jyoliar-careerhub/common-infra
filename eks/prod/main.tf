@@ -200,7 +200,7 @@ module "opensearch" {
   source = "../_modules/opensearch"
 
   name       = "${var.env}-eks-logs"
-  subnet_ids = local.eks_subnets_outputs.public_subnet_ids
+  subnet_ids = [local.eks_subnets_outputs.public_subnet_ids[0]]
   vpc_id     = local.eks_subnets_outputs.vpc_id
 
   engine_version = "OpenSearch_2.17"
