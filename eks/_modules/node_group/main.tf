@@ -38,6 +38,15 @@ resource "aws_eks_node_group" "careerhub" {
     aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
   ]
+  labels = var.labels
+  dynamic "taint" {
+    for_each = var.taints
+    content {
+      key    = taint.value.key
+      value  = taint.value.value
+      effect = taint.value.effect
+    }
+  }
 }
 
 resource "aws_iam_role" "node_group" {
