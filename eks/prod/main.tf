@@ -18,11 +18,6 @@ locals {
       labels = {
         "app" = "monitoring"
       }
-      taints = [{
-        key    = "app"
-        value  = "monitoring"
-        effect = "PREFER_NO_SCHEDULE"
-      }]
     }
   }
 }
