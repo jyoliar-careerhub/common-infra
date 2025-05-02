@@ -41,6 +41,20 @@ variable "ami_type" {
   type = string
 }
 
+variable "labels" {
+  type    = map(string)
+  default = {}
+}
+
+variable "taints" {
+  type = list(object({
+    key    = string
+    value  = string
+    effect = string
+  }))
+  default = []
+}
+
 variable "update_config" {
   type    = number
   default = 1

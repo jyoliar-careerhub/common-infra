@@ -22,10 +22,10 @@ output "aws_lbc_sa" {
   value = module.aws_lbc_role.service_account_name
 }
 
-output "opensearch_endpoint" {
-  value = module.opensearch.opensearch_endpoint
-}
+# output "opensearch_endpoint" {
+#   value = module.opensearch.opensearch_endpoint
+# }
 
-output "opensearch_dashboard_endpoint" {
-  value = module.opensearch.opensearch_dashboard_endpoint
-}
+# output "opensearch_dashboard_endpoint" {
+#   value = module.opensearch.opensearch_dashboard_endpoint
+# }

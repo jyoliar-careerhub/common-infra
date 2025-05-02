@@ -8,14 +8,22 @@ locals {
       instance_types = ["t4g.medium"]
       ami_type       = "AL2023_ARM_64_STANDARD"
     }
-    # "monitoring" = {
-    #   ng_name        = "ng-monitoring"
-    #   min_size       = 1
-    #   max_size       = 1
-    #   desired_size   = 1
-    #   instance_types = ["t4g.medium"]
-    #   ami_type       = "AL2023_ARM_64_STANDARD"
-    # }
+    "monitoring" = {
+      ng_name        = "ng-monitoring"
+      min_size       = 1
+      max_size       = 1
+      desired_size   = 1
+      instance_types = ["t4g.medium"]
+      ami_type       = "AL2023_ARM_64_STANDARD"
+      labels = {
+        "app" = "monitoring"
+      }
+      taints = [{
+        key    = "app"
+        value  = "monitoring"
+        effect = "PREFER_NO_SCHEDULE"
+      }]
+    }
   }
 }
 
@@ -46,6 +54,9 @@ module "node_group" {
   desired_size   = each.value.desired_size
   instance_types = each.value.instance_types
   ami_type       = each.value.ami_type
+
+  labels = lookup(each.value, "labels", {})
+  taints = lookup(each.value, "taints", [])
 }
 
 
@@ -186,45 +197,45 @@ resource "aws_iam_role_policy_attachment" "argocd-repo-reader" {
 #   volume_size = 10
 # }
 
-module "fluentbit_opensearch_role" {
+# module "fluentbit_opensearch_role" {
 
-  source = "../_modules/pod_identity"
+#   source = "../_modules/pod_identity"
 
-  name                 = "${var.env}-fluentbit_opensearch_role"
-  cluster_arn          = module.eks.eks_cluster_arn
-  namespace            = "kube-logs"
-  service_account_name = "fluentbit-opensearch-role"
-}
+#   name                 = "${var.env}-fluentbit_opensearch_role"
+#   cluster_arn          = module.eks.eks_cluster_arn
+#   namespace            = "kube-logs"
+#   service_account_name = "fluentbit-opensearch-role"
+# }
 
-module "opensearch" {
-  source = "../_modules/opensearch"
+# module "opensearch" {
+#   source = "../_modules/opensearch"
 
-  name = "${var.env}-eks-logs"
+#   name = "${var.env}-eks-logs"
 
-  engine_version = "OpenSearch_2.17"
-  instance_type  = "t3.medium.search"
-  volume_size    = 10
-  instance_count = 1
+#   engine_version = "OpenSearch_2.17"
+#   instance_type  = "t3.medium.search"
+#   volume_size    = 10
+#   instance_count = 1
 
-  admin_principal_arns = var.cluster_admin_arns
-}
+#   admin_principal_arns = var.cluster_admin_arns
+# }
 
-data "aws_iam_policy_document" "index_permission" {
-  statement {
-    effect  = "Allow"
-    actions = ["es:ESHttpPatch", "es:ESHttpPut", "es:ESHttpPost"]
+# data "aws_iam_policy_document" "index_permission" {
+#   statement {
+#     effect  = "Allow"
+#     actions = ["es:ESHttpPatch", "es:ESHttpPut", "es:ESHttpPost"]
 
-    resources = [module.opensearch.opensearch_arn]
-  }
-}
+#     resources = [module.opensearch.opensearch_arn]
+#   }
+# }
 
-resource "aws_iam_policy" "index_permission" {
-  name        = "${var.env}-eks-es"
-  description = "Index permission policy for OpenSearch"
-  policy      = data.aws_iam_policy_document.index_permission.json
-}
+# resource "aws_iam_policy" "index_permission" {
+#   name        = "${var.env}-eks-es"
+#   description = "Index permission policy for OpenSearch"
+#   policy      = data.aws_iam_policy_document.index_permission.json
+# }
 
-resource "aws_iam_role_policy_attachment" "index_permission" {
-  policy_arn = aws_iam_policy.index_permission.arn
-  role       = module.fluentbit_opensearch_role.role_name
-}
+# resource "aws_iam_role_policy_attachment" "index_permission" {
+#   policy_arn = aws_iam_policy.index_permission.arn
+#   role       = module.fluentbit_opensearch_role.role_name
+# }
