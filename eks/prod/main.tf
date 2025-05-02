@@ -164,23 +164,56 @@ resource "aws_iam_policy" "argocd-repo-reader" {
   })
 }
 
-module "eks_secrets_provider_role" {
+resource "aws_iam_policy" "system-secrets-reader" {
+  name = "${var.env}-eks-system-secrets"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowSpecificSecret"
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter*"
+        ]
+
+        Resource = [
+          "arn:aws:ssm:${var.region}:${data.aws_caller_identity.terraform.account_id}:parameter/${module.eks.eks_cluster_name}/system/*"
+        ]
+      }
+    ]
+  })
+}
+
+locals {
+  role_for_sa = {
+    "argocd-repo-reader" = {
+      name                 = "${var.env}-argocd-repo-reader"
+      namespace            = "argocd"
+      service_account_name = "argocd-repo-reader"
+      policy_arn           = aws_iam_policy.argocd-repo-reader.arn
+    },
+    "system-secrets-reader" = {
+      name                 = "${var.env}-system-secrets-reader"
+      namespace            = "kube-system"
+      service_account_name = "system-secrets-reader"
+      policy_arn           = aws_iam_policy.system-secrets-reader.arn
+    },
+  }
+}
+
+module "role_for_sa" {
   source = "../_modules/role_for_sa"
 
-  name                  = "${var.env}-argocd-repo-reader"
+  for_each = local.role_for_sa
+
+  name                  = each.value.name
   eks_oidc_provider_arn = module.eks.eks_oidc_provider_arn
-  namespace             = "argocd"
-  service_account_name  = "argocd-repo-reader"
+  namespace             = each.value.namespace
+  service_account_name  = each.value.service_account_name
+
+  policy_arn = each.value.policy_arn
 }
-
-
-
-
-resource "aws_iam_role_policy_attachment" "argocd-repo-reader" {
-  role       = module.eks_secrets_provider_role.role_name
-  policy_arn = aws_iam_policy.argocd-repo-reader.arn
-}
-
 
 #opensearch
 # module "opensearch" {
