@@ -124,8 +124,8 @@ module "aws_lbc_role" {
 
   name                 = "${var.env}-aws-lbc"
   cluster_arn          = module.eks.eks_cluster_arn
-  namespace            = var.aws_lbc_ns
-  service_account_name = var.aws_lbc_sa
+  namespace            = "kube-system"
+  service_account_name = "aws-load-balancer-controller"
 }
 
 resource "aws_iam_role_policy_attachment" "this" {
