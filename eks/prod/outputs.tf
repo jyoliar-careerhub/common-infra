@@ -26,6 +26,10 @@ output "aws_lbc_sa" {
   value = module.aws_lbc_role.service_account_name
 }
 
+output "eks_oidc_provider_arn" {
+  value = module.eks.eks_oidc_provider_arn
+}
+
 # output "opensearch_endpoint" {
 #   value = module.opensearch.opensearch_endpoint
 # }
