@@ -10,6 +10,7 @@ resource "aws_ec2_client_vpn_endpoint" "this" {
     root_certificate_chain_arn = var.client_certificate_arn
   }
 
+  split_tunnel = true
   # 연결 로깅
   connection_log_options {
     enabled = false

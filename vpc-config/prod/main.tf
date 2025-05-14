@@ -38,12 +38,3 @@ resource "aws_ec2_client_vpn_network_association" "this" {
   client_vpn_endpoint_id = module.client_vpn.client_vpn_endpoint_id
   subnet_id              = each.value
 }
-
-# 라우팅 테이블 설정
-# 추후 CIDR을 az별로 나누어 설정할 수 있도록 변경 필요
-resource "aws_ec2_client_vpn_route" "this" {
-
-  client_vpn_endpoint_id = module.client_vpn.client_vpn_endpoint_id
-  destination_cidr_block = data.aws_vpc.this.cidr_block
-  target_vpc_subnet_id   = local.core_subnets_outputs.private_subnet_ids[0]
-}
