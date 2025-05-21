@@ -33,7 +33,7 @@ resource "aws_security_group_rule" "this" {
   type              = "ingress"
   from_port         = var.port
   to_port           = var.port
-  protocol          = var.protocol
+  protocol          = var.sg_protocol
   security_group_id = var.lb_sg_id
   cidr_blocks       = var.access_allow_cidr_blocks
 }
