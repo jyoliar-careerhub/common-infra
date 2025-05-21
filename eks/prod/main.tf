@@ -210,60 +210,27 @@ module "role_for_sa" {
   policy_arn = each.value.policy_arn
 }
 
-#opensearch
-# module "opensearch" {
-#   source = "../_modules/opensearch"
+#내부 argocd, opensearch dashboard 접근을 위한 internal listener 및 target group 생성
+module "internal_tg_listener" {
+  source = "../_modules/lb_tg_listener"
 
-#   name       = "${var.env}-eks-logs-opensearch"
-#   subnet_ids = local.eks_subnets_outputs.public_subnet_ids[0]
-#   vpc_id     = local.eks_subnets_outputs.vpc_id
+  name   = "${var.env}-internal"
+  vpc_id = local.eks_subnets_outputs.vpc_id
 
-#   instance_type  = "t2.micro.search"
-#   instance_count = 1
-#   engine_version = "Elasticsearch_2.3"
+  load_balancer_arn = module.eks_alb.alb_arn
+  lb_sg_id          = module.eks_alb.lb_sg_id
 
-#   volume_size = 10
-# }
+  port     = 6443
+  protocol = "HTTPS"
 
-# module "fluentbit_opensearch_role" {
+  target_protocol   = "HTTP"
+  target_port       = 80
+  health_check_path = "/livez"
+  target_type       = "ip"
 
-#   source = "../_modules/pod_identity"
+  # 본래 vpc 내부에서만 접근 가능하도록 설정해야 하나, 
+  # 비용 절감을 위해 client vpn 구성을 필요로 하지 않는 때에는 제거하기 때문에
+  # 임의로 자택의 IP만을 접근 가능하도록 설정하여 외부 접근 차단, 보안성 강화
+  access_allow_cidr_blocks = var.internal_access_ip_cidr
+}
 
-#   name                 = "${var.env}-fluentbit_opensearch_role"
-#   cluster_arn          = module.eks.eks_cluster_arn
-#   namespace            = "kube-logs"
-#   service_account_name = "fluentbit-opensearch-role"
-# }
-
-# module "opensearch" {
-#   source = "../_modules/opensearch"
-
-#   name = "${var.env}-eks-logs"
-
-#   engine_version = "OpenSearch_2.17"
-#   instance_type  = "t3.medium.search"
-#   volume_size    = 10
-#   instance_count = 1
-
-#   admin_principal_arns = var.cluster_admin_arns
-# }
-
-# data "aws_iam_policy_document" "index_permission" {
-#   statement {
-#     effect  = "Allow"
-#     actions = ["es:ESHttpPatch", "es:ESHttpPut", "es:ESHttpPost"]
-
-#     resources = [module.opensearch.opensearch_arn]
-#   }
-# }
-
-# resource "aws_iam_policy" "index_permission" {
-#   name        = "${var.env}-eks-es"
-#   description = "Index permission policy for OpenSearch"
-#   policy      = data.aws_iam_policy_document.index_permission.json
-# }
-
-# resource "aws_iam_role_policy_attachment" "index_permission" {
-#   policy_arn = aws_iam_policy.index_permission.arn
-#   role       = module.fluentbit_opensearch_role.role_name
-# }
