@@ -220,8 +220,9 @@ module "internal_tg_listener" {
   load_balancer_arn = module.eks_alb.alb_arn
   lb_sg_id          = module.eks_alb.lb_sg_id
 
-  port     = 6443
-  protocol = "HTTPS"
+  port            = 6443
+  protocol        = "HTTPS"
+  certificate_arn = data.aws_acm_certificate.issued.arn
 
   target_protocol   = "HTTP"
   target_port       = 80
