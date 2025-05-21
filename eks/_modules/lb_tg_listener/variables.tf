@@ -22,6 +22,12 @@ variable "protocol" {
   type = string
 }
 
+variable "sg_protocol" {
+  type    = string
+  default = "tcp"
+
+}
+
 variable "target_type" {
   type = string
 }
