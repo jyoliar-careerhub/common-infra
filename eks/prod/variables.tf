@@ -21,3 +21,7 @@ variable "hosted_zone_name" {
 variable "alb_domain" {
   type = string
 }
+
+variable "internal_access_ip_cidr" {
+  type = list(string)
+}
