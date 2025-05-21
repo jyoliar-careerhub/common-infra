@@ -14,6 +14,11 @@ variable "lb_sg_id" {
   type = string
 }
 
+variable "certificate_arn" {
+  type    = string
+  default = ""
+}
+
 variable "port" {
   type = number
 }
