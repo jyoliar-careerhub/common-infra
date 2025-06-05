@@ -113,7 +113,7 @@ data "http" "aws_lbc_policy" {
 }
 
 resource "aws_iam_policy" "aws_lbc" {
-  name        = "AWSLoadBalancerControllerIAMPolicy"
+  name        = "${var.env}-AWSLoadBalancerControllerIAMPolicy"
   description = "IAM policy for AWS Load Balancer Controller"
 
   policy = data.http.aws_lbc_policy.body
