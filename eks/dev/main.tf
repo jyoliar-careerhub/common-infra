@@ -8,7 +8,7 @@ locals {
       instance_types = ["t4g.medium"]
       ami_type       = "AL2023_ARM_64_STANDARD"
     }
-    "monitoring" = {
+    "mongodb" = {
       ng_name        = "ng-mongodb"
       min_size       = 3
       max_size       = 3
