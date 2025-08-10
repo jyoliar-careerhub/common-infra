@@ -8,17 +8,24 @@ locals {
       instance_types = ["t4g.medium"]
       ami_type       = "AL2023_ARM_64_STANDARD"
     }
-    # "monitoring" = {
-    #   ng_name        = "ng-monitoring"
-    #   min_size       = 1
-    #   max_size       = 1
-    #   desired_size   = 1
-    #   instance_types = ["t4g.medium"]
-    #   ami_type       = "AL2023_ARM_64_STANDARD"
-    #   labels = {
-    #     "app" = "monitoring"
-    #   }
-    # }
+    "monitoring" = {
+      ng_name        = "ng-mongodb"
+      min_size       = 3
+      max_size       = 3
+      desired_size   = 3
+      instance_types = ["t4g.medium"]
+      ami_type       = "AL2023_ARM_64_STANDARD"
+      labels = {
+        "app" = "mongodb"
+      }
+      taints = [
+        {
+          key    = "app"
+          value  = "mongodb"
+          effect = "NO_SCHEDULE"
+        }
+      ]
+    }
   }
 }
 
