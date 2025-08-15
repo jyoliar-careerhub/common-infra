@@ -2,9 +2,9 @@ locals {
   node_group = {
     "app" = {
       ng_name        = "ng-app"
-      min_size       = 1
-      max_size       = 1
-      desired_size   = 1
+      min_size       = 2
+      max_size       = 2
+      desired_size   = 2
       instance_types = ["t4g.medium"]
       ami_type       = "AL2023_ARM_64_STANDARD"
     }
