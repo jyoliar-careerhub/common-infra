@@ -36,6 +36,9 @@ module "subnets" {
     }
   ]
 
+  public_subnet_tags = {
+    "kubernetes.io/role/elb" = "1"
+  }
 
   private_subnets = [
     for az_name, az_zone in data.aws_availability_zone.this : {
