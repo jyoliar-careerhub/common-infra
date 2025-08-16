@@ -48,7 +48,7 @@ resource "aws_security_group" "eks" {
 resource "aws_eks_addon" "vpc-cni" {
   cluster_name  = aws_eks_cluster.this.name
   addon_name    = "vpc-cni"
-  addon_version = "v1.19.2-eksbuild.1"
+  addon_version = "v1.20.1-eksbuild.1"
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
@@ -65,7 +65,7 @@ resource "aws_eks_addon" "vpc-cni" {
 resource "aws_eks_addon" "pod-identity-agent" {
   cluster_name  = aws_eks_cluster.this.name
   addon_name    = "eks-pod-identity-agent"
-  addon_version = "v1.3.4-eksbuild.1"
+  addon_version = "v1.3.8-eksbuild.2"
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
@@ -74,7 +74,7 @@ resource "aws_eks_addon" "pod-identity-agent" {
 resource "aws_eks_addon" "ebs-csi-driver" {
   cluster_name                = aws_eks_cluster.this.name
   addon_name                  = "aws-ebs-csi-driver"
-  addon_version               = "v1.44.0-eksbuild.1"
+  addon_version               = "v1.47.0-eksbuild.1"
   service_account_role_arn    = aws_iam_role.ebs_csi_driver.arn
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
