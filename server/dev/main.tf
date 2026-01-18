@@ -38,6 +38,41 @@ locals {
       ami           = local.ubuntu24
       subnet_id     = local.eks_subnets_outputs.private_subnet_ids[0]
       private_ip    = "10.0.25.104"
+      ebs_volumes = [
+        {
+          device_name = "/dev/sdf"
+          volume_size = 100
+          volume_type = "gp3"
+        }
+      ]
+    }
+    "k8s-worker-1" = {
+      role          = "worker"
+      instance_type = local.cpu2mem8
+      ami           = local.ubuntu24
+      subnet_id     = local.eks_subnets_outputs.private_subnet_ids[0]
+      private_ip    = "10.0.25.105"
+      ebs_volumes = [
+        {
+          device_name = "/dev/sdf"
+          volume_size = 100
+          volume_type = "gp3"
+        }
+      ]
+    }
+    "k8s-worker-2" = {
+      role          = "worker"
+      instance_type = local.cpu2mem8
+      ami           = local.ubuntu24
+      subnet_id     = local.eks_subnets_outputs.private_subnet_ids[0]
+      private_ip    = "10.0.25.106"
+      ebs_volumes = [
+        {
+          device_name = "/dev/sdf"
+          volume_size = 100
+          volume_type = "gp3"
+        }
+      ]
     }
   }
 }
@@ -79,6 +114,21 @@ resource "aws_instance" "this" {
   vpc_security_group_ids = [aws_security_group.this.id]
 
   private_ip = try(each.value.private_ip, null)
+
+  dynamic "ebs_block_device" {
+    for_each = try(each.value.ebs_volumes, [])
+    content {
+      device_name = ebs_block_device.value.device_name
+      volume_size = ebs_block_device.value.volume_size
+      volume_type = ebs_block_device.value.volume_type
+    }
+  }
+
+  root_block_device {
+    volume_size           = 30
+    volume_type           = "gp3"
+    delete_on_termination = true
+  }
 
   tags = {
     Name = each.key
