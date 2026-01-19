@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(terraform init:*)",
+      "Bash(terraform apply:*)",
+      "Bash(terraform plan:*)"
+    ]
+  }
+}
