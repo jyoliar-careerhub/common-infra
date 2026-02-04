@@ -1,5 +1,14 @@
 # On-Premise 모의 환경 Terraform 프로젝트
 
+## ⚠️ 필수 행동 규칙
+
+**작업 실패/오류 발생 시:**
+1. 원인 파악까지만 진행
+2. **절대 임의로 조치하지 않음** (cleanup, rollback, destroy, 재시도 등 금지)
+3. 상황을 보고하고 사용자 지시 대기
+
+이 규칙을 어기면 안 됩니다.
+
 ## 개요
 
 Kubernetes on-premise 환경을 AWS에서 모의 구축하기 위한 Terraform 프로젝트입니다.
@@ -71,6 +80,22 @@ terraform destroy --auto-approve
 
 - ansible.jyo-liar.com - Ansible 서버
 - k8s.jyo-liar.com - K8s API (NLB)
+
+## 인프라 상태 확인
+
+인프라 현황 확인 시 **Terraform 명령어**를 사용합니다. AWS CLI는 사용하지 않습니다.
+
+| 용도 | 명령어 |
+|------|--------|
+| 리소스 목록 | `terraform state list` |
+| 상세 정보 | `terraform show` |
+| 출력값 확인 | `terraform output` |
+
+```bash
+cd for-onpremise/server
+terraform state list
+terraform output
+```
 
 ## 주의사항
 

@@ -66,13 +66,6 @@ locals {
       ami           = local.ubuntu24
       subnet_id     = local.vpc_outputs.eks_private_subnet_ids[0]
       private_ip    = "10.0.25.106"
-      ebs_volumes = [
-        {
-          device_name = "/dev/sdf"
-          volume_size = 100
-          volume_type = "gp3"
-        }
-      ]
     }
   }
 }
