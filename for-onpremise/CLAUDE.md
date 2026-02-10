@@ -9,6 +9,12 @@
 
 이 규칙을 어기면 안 됩니다.
 
+## ⛔ 금지 사항
+
+- **AWS CLI 사용 금지** - 모든 인프라 작업은 Terraform으로만 수행
+- Terraform 인증 실패 시 AWS CLI로 대체하지 않고 오류 보고
+- `aws` 명령어 실행 금지 (`aws ec2`, `aws s3`, `aws iam` 등 모두 해당)
+
 ## 개요
 
 Kubernetes on-premise 환경을 AWS에서 모의 구축하기 위한 Terraform 프로젝트입니다.
