@@ -23,3 +23,9 @@ variable "additional_public_key" {
   type        = string
   default     = ""
 }
+
+variable "worker_ingress_domain" {
+  description = "Domain for worker ingress NLB (e.g., *.jyo-liar.com)"
+  type        = string
+  default     = "*.jyo-liar.com"
+}
