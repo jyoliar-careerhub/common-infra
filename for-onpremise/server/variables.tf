@@ -17,3 +17,9 @@ variable "server_domain" {
 variable "k8s_api_domain" {
   type = string
 }
+
+variable "additional_public_key" {
+  description = "Additional SSH public key to add to authorized_keys"
+  type        = string
+  default     = ""
+}

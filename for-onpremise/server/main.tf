@@ -4,6 +4,9 @@ locals {
   cpu2mem8 = "t4g.large"
   ubuntu24 = "ami-027308df79a86d22c" #Ubuntu 24.04 LTS
 
+  # user_data script to add additional SSH key
+  additional_key_user_data = var.additional_public_key != "" ? "#!/bin/bash\necho '${var.additional_public_key}' >> /home/ubuntu/.ssh/authorized_keys" : null
+
   instances = {
     "ansible-server" = {
       role          = "ansible-server"
@@ -140,7 +143,7 @@ resource "aws_instance" "this" {
     Name = each.key
   }
 
-  user_data = try(each.value.user_data, null)
+  user_data = local.additional_key_user_data
 }
 
 # Route53 Records
