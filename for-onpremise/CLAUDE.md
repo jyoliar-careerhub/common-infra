@@ -18,7 +18,7 @@
 ## 개요
 
 Kubernetes on-premise 환경을 AWS에서 모의 구축하기 위한 Terraform 프로젝트입니다.
-VPC는 유지하고, **server 워크스페이스만 생성/제거**하여 비용을 관리합니다.
+VPC와 IAM은 유지하고, **server 워크스페이스만 생성/제거**하여 비용을 관리합니다.
 
 ## 디렉토리 구조
 
@@ -30,6 +30,7 @@ for-onpremise/
 │   ├── subnets/
 │   └── nat/
 ├── vpc/                # VPC 워크스페이스 (유지)
+├── iam/                # IAM 워크스페이스 (유지)
 └── server/             # Server 워크스페이스 (생성/제거 대상)
 ```
 
@@ -38,7 +39,8 @@ for-onpremise/
 | 워크스페이스 | Terraform Cloud | 용도 | 상태 |
 |-------------|-----------------|------|------|
 | vpc | onpremise-vpc | VPC, Subnets, Route Tables | 항상 유지 |
-| server | onpremise-server | NAT, EC2, NLB, Route53, IAM | 필요시 생성/제거 |
+| iam | onpremise-iam | IAM User, Access Key | 항상 유지 |
+| server | onpremise-server | NAT, EC2, NLB, Route53 | 필요시 생성/제거 |
 
 ## 주요 명령어
 
